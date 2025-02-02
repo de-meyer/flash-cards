@@ -2,6 +2,22 @@ import { Canvas } from "@react-three/fiber";
 import Head from "next/head";
 
 export default function Home() {
+  function Cube({
+    position,
+    color,
+    size,
+  }: {
+    position: [number, number, number];
+    color: string;
+    size: [number, number, number];
+  }) {
+    return (
+      <mesh position={position}>
+        <boxGeometry args={size} />
+        <meshStandardMaterial color={color} />
+      </mesh>
+    );
+  }
   return (
     <>
       <Head>
@@ -10,12 +26,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div>
+        <div className="h-screen w-full">
           <Canvas>
-            <mesh>
-              <boxGeometry />
-              <meshStandardMaterial />
-            </mesh>
+            <directionalLight position={[0, 0, 2]} />
+            <ambientLight intensity={0.5} />
+            <Cube position={[1, 0, 0]} color="red" size={[1, 1, 1]} />
+            <Cube position={[-1, 2, 0]} color="orange" size={[1, 1, 1]} />
+            <Cube position={[1, 2, 0]} color="green" size={[1, 1, 1]} />
+            <Cube position={[-1, 0, 0]} color="violet" size={[1, 1, 1]} />
           </Canvas>
         </div>
       </main>
