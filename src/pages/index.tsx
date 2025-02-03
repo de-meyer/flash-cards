@@ -30,10 +30,7 @@ export default function Home() {
           <Canvas>
             <directionalLight position={[0, 0, 2]} />
             <ambientLight intensity={0.5} />
-            <Cube position={[1, 0, 0]} color="red" size={[1, 1, 1]} />
-            <Cube position={[-1, 2, 0]} color="orange" size={[1, 1, 1]} />
-            <Cube position={[1, 2, 0]} color="green" size={[1, 1, 1]} />
-            <Cube position={[-1, 0, 0]} color="violet" size={[1, 1, 1]} />
+            <Cube position={[0, 0, 0]} color="red" size={[3, 2, 1]} />
           </Canvas>
         </div>
       </main>
