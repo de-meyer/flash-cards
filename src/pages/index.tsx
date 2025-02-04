@@ -1,11 +1,12 @@
 import { Canvas } from "@react-three/fiber";
 import Head from "next/head";
+import { useState } from "react";
+import { RoundedBox, Text } from "@react-three/drei";
 
 export default function Home() {
   function Cube({
     position,
     color,
-    size,
   }: {
     position: [number, number, number];
     color: string;
@@ -13,11 +14,71 @@ export default function Home() {
   }) {
     return (
       <mesh position={position}>
-        <boxGeometry args={size} />
+        <RoundedBox
+          args={[3, 2, 1]} // Width, Height, Depth
+          radius={0.1} // Corner radius
+          smoothness={4} // Smoother corners
+        >
+          <meshStandardMaterial color={"lightGreen"} />
+        </RoundedBox>
         <meshStandardMaterial color={color} />
+        <ClickableButton
+          size={[0.6, 0.3]}
+          position={[0.9, -0.6, 1]}
+          buttonText="Next &#10095;"
+          color="lightgreen"
+        />
+        <ClickableButton
+          size={[0.8, 0.3]}
+          position={[0, -0.6, 1]}
+          buttonText="Show Solution"
+          color="lightgreen"
+        />
+        <ClickableButton
+          size={[0.6, 0.3]}
+          position={[-0.9, -0.6, 1]}
+          buttonText="&#10094; Previous"
+          color="lightgreen"
+        />
       </mesh>
     );
   }
+
+  const ClickableButton = ({
+    size,
+    position,
+    buttonText,
+    color,
+  }: {
+    size: [number, number];
+    position: [number, number, number];
+    buttonText: string;
+    color?: string;
+  }) => {
+    const [hovered, setHovered] = useState(false);
+
+    return (
+      <group position={position}>
+        <mesh
+          onClick={() => console.log({ buttonText })}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
+        >
+          <planeGeometry args={size} />
+          <meshStandardMaterial color={hovered ? "grey" : color} />
+        </mesh>
+        <Text
+          position={[0, 0, 0]}
+          fontSize={0.1}
+          color="black"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {buttonText}
+        </Text>
+      </group>
+    );
+  };
   return (
     <>
       <Head>
