@@ -1,12 +1,13 @@
 import { Canvas } from "@react-three/fiber";
 import Head from "next/head";
 import { useState } from "react";
-import { RoundedBox, Text } from "@react-three/drei";
+import { RoundedBox, Text, useCursor } from "@react-three/drei";
 
 export default function Home() {
   function Cube({
     position,
     color,
+    size,
   }: {
     position: [number, number, number];
     color: string;
@@ -15,35 +16,95 @@ export default function Home() {
     return (
       <mesh position={position}>
         <RoundedBox
-          args={[3, 2, 1]} // Width, Height, Depth
+          args={size} // Width, Height, Depth
           radius={0.1} // Corner radius
           smoothness={4} // Smoother corners
         >
-          <meshStandardMaterial color={"lightGreen"} />
+          <meshStandardMaterial color={"white"} />
         </RoundedBox>
         <meshStandardMaterial color={color} />
-        <ClickableButton
-          size={[0.6, 0.3]}
-          position={[0.9, -0.6, 1]}
-          buttonText="Next &#10095;"
-          color="lightgreen"
-        />
-        <ClickableButton
-          size={[0.8, 0.3]}
-          position={[0, -0.6, 1]}
-          buttonText="Show Solution"
-          color="lightgreen"
-        />
-        <ClickableButton
-          size={[0.6, 0.3]}
-          position={[-0.9, -0.6, 1]}
-          buttonText="&#10094; Previous"
-          color="lightgreen"
-        />
+        <group position={[0, -0.03, 0]}>
+          <QuestionPane
+            size={[2.8, 1.5, 1]}
+            position={[0, 0.2, 0.1]}
+            questionText="What is the Question?"
+          />
+          <BottomRow size={[2.8, 0.3, 1]} position={[0, -0.745, 0.1]} />
+        </group>
       </mesh>
     );
   }
 
+  const QuestionPane = ({
+    size,
+    position,
+    questionText,
+  }: {
+    size: [number, number, number];
+    position: [number, number, number];
+    questionText: string;
+  }) => {
+    return (
+      <mesh position={position}>
+        <RoundedBox
+          args={size} // Width, Height, Depth
+          radius={0.1} // Corner radius
+          smoothness={4} // Smoother corners
+        >
+          <meshStandardMaterial color={"lightgreen"} />
+        </RoundedBox>
+        <Text
+          position={[0, 0, 1]}
+          fontSize={0.1}
+          color="black"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {questionText}
+        </Text>
+      </mesh>
+    );
+  };
+
+  const BottomRow = ({
+    size,
+    position,
+  }: {
+    size: [number, number, number];
+    position: [number, number, number];
+  }) => {
+    return (
+      <mesh position={position}>
+        <RoundedBox
+          args={size} // Width, Height, Depth
+          radius={0.1} // Corner radius
+          smoothness={4} // Smoother corners
+        >
+          <meshStandardMaterial color={"lightgreen"} />
+          <group>
+            <ClickableButton
+              size={[0.6, 0.2]}
+              position={[0.8, 0.13, 1.2]}
+              buttonText="Next &#10095;"
+              color="lightGreen"
+            />
+            <ClickableButton
+              size={[0.6, 0.2]}
+              position={[0, 0.13, 1.2]}
+              buttonText="Show Solution"
+              color="lightGreen"
+            />
+            <ClickableButton
+              size={[0.6, 0.2]}
+              position={[-0.8, 0.13, 1.2]}
+              buttonText="&#10094; Previous"
+              color="lightGreen"
+            />
+          </group>
+        </RoundedBox>
+      </mesh>
+    );
+  };
   const ClickableButton = ({
     size,
     position,
@@ -56,16 +117,16 @@ export default function Home() {
     color?: string;
   }) => {
     const [hovered, setHovered] = useState(false);
-
+    useCursor(hovered);
     return (
       <group position={position}>
         <mesh
-          onClick={() => console.log({ buttonText })}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
+          onClick={() => console.log({ buttonText })}
         >
           <planeGeometry args={size} />
-          <meshStandardMaterial color={hovered ? "grey" : color} />
+          <meshStandardMaterial color={color} />
         </mesh>
         <Text
           position={[0, 0, 0]}
@@ -89,8 +150,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="h-screen w-full">
           <Canvas>
-            <directionalLight position={[0, 0, 2]} />
-            <ambientLight intensity={0.5} />
+            <ambientLight intensity={2} />
             <Cube position={[0, 0, 0]} color="red" size={[3, 2, 1]} />
           </Canvas>
         </div>
