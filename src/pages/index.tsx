@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useState } from "react";
 import { RoundedBox, Text, useCursor } from "@react-three/drei";
 import { PerspectiveCamera } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 
 export default function Home() {
   function Cube({
@@ -15,7 +16,7 @@ export default function Home() {
     size: [number, number, number];
   }) {
     return (
-      <mesh position={position} rotateX={0.5}>
+      <mesh position={position}>
         <RoundedBox
           args={size} // Width, Height, Depth
           radius={0.1} // Corner radius
@@ -31,6 +32,7 @@ export default function Home() {
             questionText="What is the Question?"
           />
           <BottomRow size={[2.8, 0.3, 1]} position={[0, -0.745, 0.1]} />
+          <OrbitControls />
         </group>
       </mesh>
     );
