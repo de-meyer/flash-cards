@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import Head from "next/head";
 import { useState } from "react";
 import { RoundedBox, Text, useCursor } from "@react-three/drei";
+import { PerspectiveCamera } from "@react-three/drei";
 
 export default function Home() {
   function Cube({
@@ -14,7 +15,7 @@ export default function Home() {
     size: [number, number, number];
   }) {
     return (
-      <mesh position={position}>
+      <mesh position={position} rotateX={0.5}>
         <RoundedBox
           args={size} // Width, Height, Depth
           radius={0.1} // Corner radius
@@ -151,6 +152,8 @@ export default function Home() {
         <div className="h-screen w-full">
           <Canvas>
             <ambientLight intensity={2} />
+            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+
             <Cube position={[0, 0, 0]} color="red" size={[3, 2, 1]} />
           </Canvas>
         </div>
