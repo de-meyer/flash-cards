@@ -1,9 +1,11 @@
 import { Canvas } from "@react-three/fiber";
 import Head from "next/head";
-import { useState } from "react";
-import { RoundedBox, Text, useCursor } from "@react-three/drei";
+import { useRef, useState } from "react";
+import { Html, RoundedBox, Text, useCursor } from "@react-three/drei";
 import { PerspectiveCamera } from "@react-three/drei";
 import { OrbitControls } from "@react-three/drei";
+import gsap from "gsap";
+import type * as THREE from "three";
 
 export default function Home() {
   function Cube({
@@ -15,26 +17,61 @@ export default function Home() {
     color: string;
     size: [number, number, number];
   }) {
+    const boxRef = useRef<THREE.Group>(null);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const handleClick = () => {
+      const y = !isFlipped ? Math.PI * (190 / 180) : 0;
+      if (boxRef.current === null) return;
+      gsap.to(boxRef.current.rotation, {
+        y: y,
+        duration: 1,
+      });
+      setIsFlipped(!isFlipped);
+    };
+
     return (
-      <mesh position={position}>
-        <RoundedBox
-          args={size} // Width, Height, Depth
-          radius={0.1} // Corner radius
-          smoothness={4} // Smoother corners
+      <group ref={boxRef}>
+        <mesh position={position}>
+          <RoundedBox
+            args={size} // Width, Height, Depth
+            radius={0.1} // Corner radius
+            smoothness={4} // Smoother corners
+          >
+            <meshStandardMaterial color={"white"} />
+          </RoundedBox>
+          <meshStandardMaterial color={color} />
+          <group position={[0, -0.03, 0]}>
+            <QuestionPane
+              size={[2.8, 1.5, 1]}
+              position={[0, 0.2, 0.1]}
+              questionText="What is the Question?"
+            />
+            <BottomRow
+              handleClick={handleClick}
+              size={[2.8, 0.3, 1]}
+              position={[0, -0.745, 0.1]}
+            />
+            <OrbitControls />
+          </group>
+        </mesh>
+        <Html
+          transform
+          occlude
+          position={[0, 0, -0.51]}
+          rotation={[0, Math.PI, 0]}
+          center
         >
-          <meshStandardMaterial color={"white"} />
-        </RoundedBox>
-        <meshStandardMaterial color={color} />
-        <group position={[0, -0.03, 0]}>
-          <QuestionPane
-            size={[2.8, 1.5, 1]}
-            position={[0, 0.2, 0.1]}
-            questionText="What is the Question?"
-          />
-          <BottomRow size={[2.8, 0.3, 1]} position={[0, -0.745, 0.1]} />
-          <OrbitControls />
-        </group>
-      </mesh>
+          <div className="rounded bg-white p-2 shadow-lg">
+            <p className="text-black">Backside UI</p>
+            <button
+              onClick={handleClick}
+              className="mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+            >
+              Click Me
+            </button>
+          </div>
+        </Html>
+      </group>
     );
   }
 
@@ -72,9 +109,11 @@ export default function Home() {
   const BottomRow = ({
     size,
     position,
+    handleClick,
   }: {
     size: [number, number, number];
     position: [number, number, number];
+    handleClick?: () => void;
   }) => {
     return (
       <mesh position={position}>
@@ -96,6 +135,7 @@ export default function Home() {
               position={[0, 0.13, 1.2]}
               buttonText="Show Solution"
               color="lightGreen"
+              onClick={handleClick}
             />
             <ClickableButton
               size={[0.6, 0.2]}
@@ -113,21 +153,19 @@ export default function Home() {
     position,
     buttonText,
     color,
+    onClick,
   }: {
     size: [number, number];
     position: [number, number, number];
     buttonText: string;
     color?: string;
+    onClick?: () => void;
   }) => {
     const [hovered, setHovered] = useState(false);
     useCursor(hovered);
     return (
       <group position={position}>
-        <mesh
-          onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
-          onClick={() => console.log({ buttonText })}
-        >
+        <mesh onPointerOver={() => setHovered(true)} onClick={onClick}>
           <planeGeometry args={size} />
           <meshStandardMaterial color={color} />
         </mesh>
