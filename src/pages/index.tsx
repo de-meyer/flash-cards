@@ -1,9 +1,8 @@
 import { Canvas } from "@react-three/fiber";
 import Head from "next/head";
 import { useRef, useState } from "react";
-import { Html, RoundedBox, Text, useCursor } from "@react-three/drei";
+import { Html, RoundedBox } from "@react-three/drei";
 import { PerspectiveCamera } from "@react-three/drei";
-import { OrbitControls } from "@react-three/drei";
 import gsap from "gsap";
 import type * as THREE from "three";
 
@@ -20,7 +19,7 @@ export default function Home() {
     const boxRef = useRef<THREE.Group>(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const handleClick = () => {
-      const y = !isFlipped ? Math.PI * (190 / 180) : 0;
+      const y = !isFlipped ? Math.PI * (190 / 190) : 0;
       if (boxRef.current === null) return;
       gsap.to(boxRef.current.rotation, {
         y: y,
@@ -40,20 +39,39 @@ export default function Home() {
             <meshStandardMaterial color={"white"} />
           </RoundedBox>
           <meshStandardMaterial color={color} />
-          <group position={[0, -0.03, 0]}>
-            <QuestionPane
-              size={[2.8, 1.5, 1]}
-              position={[0, 0.2, 0.1]}
-              questionText="What is the Question?"
-            />
-            <BottomRow
-              handleClick={handleClick}
-              size={[2.8, 0.3, 1]}
-              position={[0, -0.745, 0.1]}
-            />
-            <OrbitControls />
-          </group>
         </mesh>
+        <Html
+          scale={0.1}
+          transform
+          occlude
+          position={[0, 0, 0.51]}
+          rotation={[0, 0, 0]}
+          center
+        >
+          <div className="grid w-96 columns-3 rounded bg-white p-2 shadow-lg">
+            <span className="col-span-3 row-start-1 items-center justify-center text-black">
+              Frontside UI
+            </span>
+            <button
+              onClick={() => console.log("Previous")}
+              className="row-start-2 mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleClick}
+              className="row-start-2 mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+            >
+              Show solution
+            </button>
+            <button
+              onClick={() => console.log("Next")}
+              className="row-start-2 mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+            >
+              Next
+            </button>
+          </div>
+        </Html>
         <Html
           transform
           occlude
@@ -74,113 +92,6 @@ export default function Home() {
       </group>
     );
   }
-
-  const QuestionPane = ({
-    size,
-    position,
-    questionText,
-  }: {
-    size: [number, number, number];
-    position: [number, number, number];
-    questionText: string;
-  }) => {
-    return (
-      <mesh position={position}>
-        <RoundedBox
-          args={size} // Width, Height, Depth
-          radius={0.1} // Corner radius
-          smoothness={4} // Smoother corners
-        >
-          <meshStandardMaterial color={"lightgreen"} />
-        </RoundedBox>
-        <Text
-          position={[0, 0, 1]}
-          fontSize={0.1}
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {questionText}
-        </Text>
-      </mesh>
-    );
-  };
-
-  const BottomRow = ({
-    size,
-    position,
-    handleClick,
-  }: {
-    size: [number, number, number];
-    position: [number, number, number];
-    handleClick?: () => void;
-  }) => {
-    return (
-      <mesh position={position}>
-        <RoundedBox
-          args={size} // Width, Height, Depth
-          radius={0.1} // Corner radius
-          smoothness={4} // Smoother corners
-        >
-          <meshStandardMaterial color={"lightgreen"} />
-          <group>
-            <ClickableButton
-              size={[0.6, 0.2]}
-              position={[0.8, 0.13, 1.2]}
-              buttonText="Next &#10095;"
-              color="lightGreen"
-            />
-            <ClickableButton
-              size={[0.6, 0.2]}
-              position={[0, 0.13, 1.2]}
-              buttonText="Show Solution"
-              color="lightGreen"
-              onClick={handleClick}
-            />
-            <ClickableButton
-              size={[0.6, 0.2]}
-              position={[-0.8, 0.13, 1.2]}
-              buttonText="&#10094; Previous"
-              color="lightGreen"
-            />
-          </group>
-        </RoundedBox>
-      </mesh>
-    );
-  };
-  const ClickableButton = ({
-    size,
-    position,
-    buttonText,
-    color,
-    onClick,
-  }: {
-    size: [number, number];
-    position: [number, number, number];
-    buttonText: string;
-    color?: string;
-    onClick?: () => void;
-  }) => {
-    const [hovered, setHovered] = useState(false);
-    useCursor(hovered);
-    return (
-      <group position={position}>
-        <mesh onPointerOver={() => setHovered(true)} onClick={onClick}>
-          <planeGeometry args={size} />
-          <meshStandardMaterial color={color} />
-        </mesh>
-        <Text
-          position={[0, 0, 0]}
-          fontSize={0.1}
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {buttonText}
-        </Text>
-      </group>
-    );
-  };
   return (
     <>
       <Head>
@@ -189,7 +100,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="h-screen w-full">
+        <div
+          className="canvas-container"
+          style={{ width: "100%", height: "100vh" }}
+        >
           <Canvas>
             <ambientLight intensity={2} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
