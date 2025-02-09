@@ -16,6 +16,29 @@ export default function Home() {
     color: string;
     size: [number, number, number];
   }) {
+    const quizData = [
+      {
+        question: "What is the capital of France?",
+        answer: "Paris",
+      },
+      {
+        question: "Who wrote 'To Kill a Mockingbird'?",
+        answer: "Harper Lee",
+      },
+      {
+        question: "What is the chemical symbol for gold?",
+        answer: "Au",
+      },
+      {
+        question: "What is the largest planet in our solar system?",
+        answer: "Jupiter",
+      },
+      {
+        question: "Who developed the theory of relativity?",
+        answer: "Albert Einstein",
+      },
+    ];
+    const [currentQuestion, setCurrentQuestion] = useState(0);
     const boxRef = useRef<THREE.Group>(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const handleClick = () => {
@@ -47,26 +70,35 @@ export default function Home() {
           position={[0, 0, 0.51]}
           rotation={[0, 0, 0]}
           center
+          style={{ width: "1100px", height: "700px" }}
         >
-          <div className="grid w-96 columns-3 rounded bg-white p-2 shadow-lg">
-            <span className="col-span-3 row-start-1 items-center justify-center text-black">
-              Frontside UI
+          <div className="grid h-full w-full columns-3 rounded bg-white p-2 shadow-lg">
+            <span className="col-span-3 row-start-1 h-full items-center justify-center text-center text-black">
+              {quizData[currentQuestion]?.question}
             </span>
             <button
-              onClick={() => console.log("Previous")}
-              className="row-start-2 mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+              onClick={() =>
+                currentQuestion > 0
+                  ? setCurrentQuestion(currentQuestion - 1)
+                  : setCurrentQuestion(quizData.length - 1)
+              } // Decrement the current question
+              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-white"
             >
               Previous
             </button>
             <button
               onClick={handleClick}
-              className="row-start-2 mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-white"
             >
               Show solution
             </button>
             <button
-              onClick={() => console.log("Next")}
-              className="row-start-2 mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+              onClick={() =>
+                currentQuestion < quizData.length - 1
+                  ? setCurrentQuestion(currentQuestion + 1)
+                  : setCurrentQuestion(0)
+              } // Increment the current question
+              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-white"
             >
               Next
             </button>
@@ -80,7 +112,7 @@ export default function Home() {
           center
         >
           <div className="rounded bg-white p-2 shadow-lg">
-            <p className="text-black">Backside UI</p>
+            <p className="text-black">{quizData[currentQuestion]?.answer}</p>
             <button
               onClick={handleClick}
               className="mt-2 rounded bg-blue-500 px-3 py-1 text-white"
@@ -104,7 +136,7 @@ export default function Home() {
           className="canvas-container"
           style={{ width: "100%", height: "100vh" }}
         >
-          <Canvas>
+          <Canvas camera={{ position: [0, 0, 4] }}>
             <ambientLight intensity={2} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
 
