@@ -67,13 +67,14 @@ export default function Home() {
           scale={0.1}
           transform
           occlude
-          position={[0, 0, 0.51]}
+          position={[0, 0, 0.2]}
+          zIndexRange={[100, 0]}
           rotation={[0, 0, 0]}
           center
           style={{ width: "1100px", height: "700px" }}
         >
           <div className="grid h-full w-full columns-3 rounded bg-white p-2 shadow-lg">
-            <span className="col-span-3 row-start-1 h-full items-center justify-center text-center text-black">
+            <span className="col-span-3 row-start-1 h-full items-center justify-center text-center text-7xl text-black">
               {quizData[currentQuestion]?.question}
             </span>
             <button
@@ -82,13 +83,13 @@ export default function Home() {
                   ? setCurrentQuestion(currentQuestion - 1)
                   : setCurrentQuestion(quizData.length - 1)
               } // Decrement the current question
-              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-white"
+              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-5xl text-white"
             >
               Previous
             </button>
             <button
               onClick={handleClick}
-              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-white"
+              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-5xl text-white"
             >
               Show solution
             </button>
@@ -98,26 +99,30 @@ export default function Home() {
                   ? setCurrentQuestion(currentQuestion + 1)
                   : setCurrentQuestion(0)
               } // Increment the current question
-              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-white"
+              className="row-start-2 mt-2 h-1/3 rounded bg-blue-500 px-3 py-1 text-5xl text-white"
             >
               Next
             </button>
           </div>
         </Html>
         <Html
+          scale={0.1}
           transform
           occlude
-          position={[0, 0, -0.51]}
+          position={[0, 0, -0.2]}
           rotation={[0, Math.PI, 0]}
           center
+          style={{ width: "1100px", height: "700px" }}
         >
-          <div className="rounded bg-white p-2 shadow-lg">
-            <p className="text-black">{quizData[currentQuestion]?.answer}</p>
+          <div className="flex h-full w-full flex-col items-center justify-between rounded bg-white p-2 shadow-lg">
+            <p className="text-7xl text-black">
+              {quizData[currentQuestion]?.answer}
+            </p>
             <button
               onClick={handleClick}
-              className="mt-2 rounded bg-blue-500 px-3 py-1 text-white"
+              className="rounded-lg bg-blue-500 px-3 py-1 text-7xl text-white"
             >
-              Click Me
+              Turn me
             </button>
           </div>
         </Html>
@@ -140,7 +145,7 @@ export default function Home() {
             <ambientLight intensity={2} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
 
-            <Cube position={[0, 0, 0]} color="red" size={[3, 2, 1]} />
+            <Cube position={[0, 0, 0]} color="red" size={[3, 2, 0.2]} />
           </Canvas>
         </div>
       </main>
