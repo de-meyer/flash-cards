@@ -13,4 +13,3 @@ You'll need pnpm for this if you wanna run it locally
 
 `pnpm i` -> for installation
 `pnpm dev` -> for local deployment
-image todo
